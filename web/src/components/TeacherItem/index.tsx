@@ -1,46 +1,60 @@
-import React from "react";
+import React from 'react';
 
-import whatsappIcon from "../../assets/images/icons/whatsapp.svg";
+import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
-import "./styles.css";
+import './styles.css';
+import api from '../../services/api';
 
-function TeacherItem() {
+export interface Teacher {
+  avatar: string;
+  bio: string;
+  cost: number;
+  id: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id,
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://avatars1.githubusercontent.com/u/38964840?s=460&u=d2252c0eff05c0af5dbd8c3944b5a3eaaed5f84c&v=4"
-          alt="Wallison Moura"
-        />
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Wallison Moura</strong>
-          <span>Lógica de programação</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
 
-      <p>
-        Entusiasta em desenvolvimento de sistema.
-        <br />
-        <br />
-        Profissional apaixonado por tecnologia e desenvolvimento de sistema,
-        Sempre buscando ajudar os alunos em lógica de programação, sobre
-        desenvolvimento web e mobile com javascript, banco de dados relacional e
-        não relacional
-      </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 80,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
 
-        <button type="button">
+        <a
+          target="_blank"
+          onClick={createNewConnection}
+          href={`https://wa.me/${teacher.whatsapp}`}
+        >
           <img src={whatsappIcon} alt="Whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
-}
+};
 
 export default TeacherItem;
